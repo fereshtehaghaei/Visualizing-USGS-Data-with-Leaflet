@@ -1,7 +1,7 @@
 // Creating map object
 var myMap = L.map("map", {
   center:[38.0902, -96.7129],
-  zoom: 5
+  zoom: 5,
 });
 
 // Adding Gray Scale Tile layer to the map
@@ -17,7 +17,7 @@ var grayscale = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
 // Load in GeoJson data
 var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
-// Grab data with d3
+//====== <<Function>> === for Grabbing Data with d3 === <<Begins>> ========
 d3.json(earthquakesUrl, function(earthData) {
     
   console.log(earthData);
@@ -26,36 +26,49 @@ d3.json(earthquakesUrl, function(earthData) {
   function markerColor(magnitude) {
 
     switch(true) {
-      case Colormagnitude > 90:
-        return "#112233";
+      case magnitude <= 1:
+           return "#98f42f";
+
+      case magnitude <= 2:
+           return "#FDD31D";
+
+      case magnitude <= 3:
+           return "#FF7B00";
+
+      case magnitude <= 4:
+           return "#D9937A";
+
+     case magnitude <= 5:
+          return "#CE0018";
 
       default:
-        return "#98ee00";
+        return "#AEC6F9";
       }
 
 }
 
-  // Preventing the error for those mag that are Zero
-  function markerRadius(Radiusmagnitude){
+  // Function to Determine Size of Marker Based on the Magnitude of the Earthquake
+  // Preventing the error from happening for those magnitude that are = Zero
+  function markerSize(magnitude){
 
-    if (Radiusmagnitude === 0)
-       {
-        return 1;
-       }
-    
-    return Radiusmagnitude * 3;
+      if (magnitude === 0)
+        {
+          return 1;
+        }
+
+      return magnitude * 4;
 }
 
-  function applyStyle(colorRadius) {
-   return {
-    
-      radius: markerRadius(colorRadius.properties.mag),
-      fillColor: markerColor(colorRadius.geometry.coordinates[2]),
-      color: '#fff', // border color
-      weight: 1,
-      opacity:1,
-      fillOpacity: 0.7
-    };
+  function styleInfo(feature) {
+      return {
+          radius: markerSize(feature.properties.mag),
+          fillColor: markerColor(feature.properties.mag),
+          color: '#fff', // border color
+          weight: .5,
+          opacity: 1,
+          fillOpacity: .7,
+          stroke: true,
+        };
 
   }
 
@@ -63,114 +76,44 @@ d3.json(earthquakesUrl, function(earthData) {
   L.geoJson(earthData, { 
 
     pointToLayer: function(feature, latlng){
-      console.log(latlng);
-      return L.circleMarker(latlng);
+      //console.log(latlng);
+        return L.circleMarker(latlng);
     },
-    style : applyStyle
+    style : styleInfo,
+
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup("<h3> Location: <br></h3>" + feature.properties.place + "<hr><p>" +
+                      "<h3> Date: <br></h3>"+ new Date(feature.properties.time) + "<hr><p>" +
+                      "<h3>Magnitude: <br></h3>" + feature.properties.mag + "</p>");
+    }
 
 
   }).addTo(myMap);
 
+  var legend = L.control({position: 'bottomright'});
+  legend.onAdd = function () {
+  
+  var div = L.DomUtil.create('div', 'info legend');
+  labels = ['<strong>Magnitudes</strong>'],
+  magnitudes = [-10,,10,30,50,70,90];
+  
+  for (var i = 0; i < magnitudes.length; i++) {
+  
+          div.innerHTML += 
+          labels.push(
+              '<i class="circle" style="background:' + markerColor(magnitudes[i]) + '"></i> ' +
+          (magnitudes[i] ? magnitudes[i] : '+'));
+  
+      }
+      div.innerHTML = labels.join('<br>');
+  return div;
+  };
+  legend.addTo(myMap);
+
+
 
 })
-
-
-// earthData.forEach(item => {
-
-//   var mark_color = "";
-
-//       if (item.mag > 3)
-//       {
-//         mark_color ="yellow"
-//       }
-
-//   L.circle(item.place, {
-//     fillOpacity: 0.75,
-//     color: "white",
-//     fillColor: mark_color,
-//     radius: markerSize(item.mg)
-//   }).bindPopup("<h3> Location: " + feature.properties.place +
-//           "</h3><hr><p>" + new Date(feature.properties.time) + 
-//           "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>"); 
-
-// })
-
-// function markerSize(magnitude) {
-//   return magnitude * 3;
-// }
-
-
-
-//   // Create a new choropleth layer with Retrieved Data
-//   geojson = L.circle(response, {
-   
-
-  //Passing in our style object
-    //style: geojson,  
-
-  // // Define what  property in the features to use
-  //   valueProperty: "mag", // which property in the features to use
-    
-  // // Set color scale
-  //   scale: ["#ffffb2", "#b10026"],
-    
-  // // Number of breaks in step range
-  //   steps: 5,
-    
-  // // q for quartile, e for equidistant, k for k-means
-  //   mode: 'q',
-
-    
-//   // Binding a pop-up to each layer
-//   	onEachFeature: function(feature, layer) {
-//         L.circle(properties.mag, {
-//           fillOpacity: .5,
-//           color:'red',
-//           fillcolor:'yellow',
-//           radius: markerSize(feature.properties.mag)
-//         })
-//         layer.bindPopup("<h3> Location: " + feature.properties.place +
-//         "</h3><hr><p>" + new Date(feature.properties.time) + 
-//         "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>");
-// 	  }
-
-// // Adding legend to the map
-// }).addTo(myMap);
-
-  
-//  // Set up the legend 
-// // Add legend (don't forget to add the CSS from index.html)
-// var legend = L.control({ position: 'bottomleft' });
-// legend.onAdd = function () {
-//   var div = L.DomUtil.create('div', 'info legend');
-//   var limits = geojson.options.limits;
-//   var colors = geojson.options.colors;
-//   var labels = [];
-
-//   // Add min & max
-//   div.innerHTML = "<h1>??????</h1>" +
-//   "<div class=\"labels\">" +
-//     "<div class=\"min\">" + limits[0] + "</div>" +
-//     "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
-//   "</div>";
-   
-
-//   limits.forEach(function (limit, index) {
-//     labels.push('<li style="background-color: ' + colors[index] + '"></li>');
-//     console.log(limit);
-//     console.log(colors);
-//   });
-
-
-//   div.innerHTML += '<ul>' + labels.join("") + '</ul>';
-//   return div;
-
-
-// };
-// // Adding Legend to Map
-// legend.addTo(myMap);
-
-// })
+//====== <<Function>> === for Grabbing Data with d3 === <<Ends>> ========
 
 
 // // // =============================== Beginning of 3 Tile Layers | satellite | gray | outdoors | ================================
