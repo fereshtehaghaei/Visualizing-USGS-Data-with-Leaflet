@@ -62,7 +62,7 @@ var tectonics = L.layerGroup();
 
 // // var geojson;
 
-// Perform a GET request to the query URL
+// Perform a GET request to the earthquakesURL
 d3.json(earthquakesUrl, function(data) {
     
     //console.log(data)
@@ -70,23 +70,61 @@ d3.json(earthquakesUrl, function(data) {
     createFeatures(data.features);
   });
 
-function createFeatures(earthquakeData) {
+function createFeatures(earthquakeData,) {
 
     
 
     function onEachFeature(feature, layer) {
-      layer.bindPopup("<h3> Location: " + feature.properties.place +
-        "</h3><hr><p>" + new Date(feature.properties.time) + "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>");
+      
+          layer.bindPopup("<h3> Location: " + feature.properties.place +
+                          "</h3><hr><p>" + new Date(feature.properties.time) + 
+                          "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>");
     }
 
     var earthquakes = L.geoJSON(earthquakeData, {
         onEachFeature: onEachFeature
       });
+
     
       // Sending our earthquakes layer to the createMap function
       createMap(earthquakes);
 
 }
+
+
+
+// Perform a GET request to the tectonicUrl
+d3.json(tectonicUrl, function(datap) {
+    
+    
+    console.log(datap)
+
+    createFeatures(datap.coordinates);
+  });
+
+// function createFeatures(tectonicData,) {
+
+    
+
+//     function onEachFeature(feature, layer) {
+      
+//           layer.bindPopup("<h3> Location: " + feature.properties.place +
+//                           "</h3><hr><p>" + new Date(feature.properties.time) + 
+//                           "</p><hr><p>Magnitude: " + feature.properties.mag + "</p>");
+//     }
+
+//     var tectonics = L.geoJSON(tectonicData, {
+        
+//         onEachFeature: onEachFeature
+//       });
+    
+//       // Sending our earthquakes layer to the createMap function
+//       createMap(tectonics);
+
+// }
+
+
+
 
 function createMap(earthquakes) {
 
