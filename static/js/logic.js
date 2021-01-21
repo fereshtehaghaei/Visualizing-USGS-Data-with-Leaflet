@@ -27,22 +27,22 @@ d3.json(earthquakesUrl, function(earthData) {
 
     switch(true) {
       case magnitude <= 1:
-           return "#98F42F";
+           return "#51ef24";
 
       case magnitude <= 2:
-           return "#FDD31D";
+           return "#b3de69";
 
       case magnitude <= 3:
-           return "#FF7B00";
+           return "#fec44f";
 
       case magnitude <= 4:
-           return "#D9937A";
+           return "#ec7014";
 
      case magnitude <= 5:
-          return "#CE0018";
+          return "#d7301f";
 
       default:
-        return "#AEC6F9";
+        return "#b30000";
       }
 
 }
@@ -91,11 +91,11 @@ d3.json(earthquakesUrl, function(earthData) {
   }).addTo(myMap);
 
   function getColor(d) {
-    return d > 90 ? '#CE0018' :
-           d > 70  ? '#D9937A' :
-           d > 50  ? '#FF7B00' :
-           d > 30  ? '#FDD31D' :
-           d > 10   ? '#98F42F' :
+    return d > 90 ? '#d7301f' :
+           d > 70  ? '#ec7014' :
+           d > 50  ? '#fad410' :
+           d > 30  ? '#fec44f' : 
+           d > 10   ? '#92fd1c' :
            d > -10   ? '#98F42F' :
                       '#AEC6F9';
 }
