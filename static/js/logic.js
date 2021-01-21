@@ -105,18 +105,15 @@ d3.json(earthquakesUrl, function(earthData) {
   
   var div = L.DomUtil.create('div', 'info legend');
   labels = [],
-  magnitudes = [-10, 10, 30, 50, 70, 90];
+  levels = [-10, 10, 30, 50, 70, 90];
   
-  for (var i = 0; i < magnitudes.length; i++) {
-  
-          div.innerHTML += 
-          labels.push(
-            '<i style="background: ' + getColor(magnitudes[i] + 1) + '"></i> ' +
-            magnitudes[i] + (magnitudes[i + 1] ? ' – ' + magnitudes[i + 1] + '<br>' : '+'));
-}
-      div.innerHTML = labels.join();
-  return div;
-  };
+  for (var i = 0; i < levels.length; i++) 
+    {
+    div.innerHTML += 
+    '<i style="background:' + getColor(levels[i] + 1) + '"></i> ' + levels[i] + (levels[i + 1] ? '&ndash;' + levels[i + 1] + '<br>' : '+');
+    }
+    return div;
+    };
   legend.addTo(myMap)
 
 
