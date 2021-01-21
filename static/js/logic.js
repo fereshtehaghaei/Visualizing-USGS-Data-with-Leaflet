@@ -27,7 +27,7 @@ d3.json(earthquakesUrl, function(earthData) {
 
     switch(true) {
       case magnitude <= 1:
-           return "#98f42f";
+           return "#98F42F";
 
       case magnitude <= 2:
            return "#FDD31D";
@@ -90,25 +90,34 @@ d3.json(earthquakesUrl, function(earthData) {
 
   }).addTo(myMap);
 
+  function getColor(d) {
+    return d > 90 ? '#CE0018' :
+           d > 70  ? '#D9937A' :
+           d > 50  ? '#FF7B00' :
+           d > 30  ? '#FDD31D' :
+           d > 10   ? '#98F42F' :
+           d > -10   ? '#98F42F' :
+                      '#AEC6F9';
+}
 
   var legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
   
   var div = L.DomUtil.create('div', 'info legend');
-  labels = ['<strong>Magnitudes</strong>'],
+  labels = [],
   magnitudes = [-10, 10, 30, 50, 70, 90];
   
   for (var i = 0; i < magnitudes.length; i++) {
   
           div.innerHTML += 
           labels.push(
-            '<i style="background: ' + markerColor(magnitudes[i] + 1) + '"></i> ' +
-            magnitudes[i] + (magnitudes[i + 1] ? '–' + magnitudes[i + 1] + '<br>' : '+'));
+            '<i style="background: ' + getColor(magnitudes[i] + 1) + '"></i> ' +
+            magnitudes[i] + (magnitudes[i + 1] ? ' – ' + magnitudes[i + 1] + '<br>' : '+'));
 }
-      div.innerHTML = labels.join('<br>');
+      div.innerHTML = labels.join();
   return div;
   };
-  legend.addTo(myMap);
+  legend.addTo(myMap)
 
 
 })
