@@ -52,6 +52,8 @@ var myMap = L.map("map", {
     ]
 });
 
+
+
 // Add our 'lightmap' tile layer to the map
 satellite.addTo(myMap);
 

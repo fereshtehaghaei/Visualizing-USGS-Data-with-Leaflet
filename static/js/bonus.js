@@ -1,37 +1,86 @@
-// Creating map object
+// // Creating map object
+// var myMap = L.map("map", {
+//     center:[38.0902, -96.7129],
+//     zoom: 5,
+//   });
+  
+//Adding Gray Tile Layer to the map
+  var grayscaleLayer = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/light-v10",
+    accessToken: API_KEY
+  });
+ 
+
+//Adding Satellite Tile Layer to the map
+var satelliteLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "mapbox.satellite",
+    accessToken: API_KEY
+});
+
+
+//Adding Outdoors Tile Layer to the map
+var outdoorsLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+    maxZoom: 18,
+    accessToken: API_KEY,
+});
+
+
+// Initialize all of the LayerGroups we'll be using
+var layers = {
+    EARTHQUAKES: new L.LayerGroup(),
+    TECTONIC_PLATES: new L.LayerGroup(),
+    GRAYSCALE: new L.LayerGroup(),
+    SATELLITE: new L.LayerGroup(),
+    OUTDOORS: new L.LayerGroup()
+
+};
+
+
+
+// Create the map with our layers, passing satelliteLayer & earthquakes as our default layer to display once page loads
+
 var myMap = L.map("map", {
     center:[38.0902, -96.7129],
-    zoom: 5,
-  });
-  
-  // Adding Gray Scale Tile layer to the map
-//   var grayscale = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-//     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-//     tileSize: 512,
-//     maxZoom: 18,
-//     zoomOffset: -1,
-//     id: "mapbox/light-v10",
-//     accessToken: API_KEY
-//   }).addTo(myMap);
-  
-// var satellite = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-//     attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-//     maxZoom: 18,
-//     id: "mapbox.satellite",
-//     accessToken: API_KEY
-// }).addTo(myMap);
+    zoom: 4,
+    layers: [
+        satelliteLayer, 
+        layers.EARTHQUAKES
+    ]
+});
 
 
-// //Adding Outdoors Tile Layer to the map
-// var outdoors = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
-//     attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-//     maxZoom: 18,
-//     accessToken: API_KEY,
-// }).addTo(myMap);
+// Create Overlays to hold overlays that may be toggled on or off on map
+var overlays = {
+    "Earthquakes" : layers.EARTHQUAKES,
+    "Tectonic Plates" : layers.TECTONIC_PLATES,
+};
 
+
+// Define baseMaps Object to Hold Base Layers & Only one base layer can be shown at a time
+var baseMaps = {
+    "Satellite": satelliteLayer,
+    "Grayscale": grayscaleLayer,
+    "Outdoors": outdoorsLayer
+};
+
+// Create a Control for our Layers & Pass in baseMaps and overlays then Add the Layer Control to the Map
+L.control.layers(baseMaps, overlays).addTo(myMap);
   
-  // Load in GeoJson data
-  var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+// =========================
+// Load in GeoJson datas
+// =========================
+ // Earthquakes GeoJson URL Variables
+var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+
+// Tectonic Plates GeoJson URL Variables
+var tectonicPlatesUrl = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundaries.json";
   
   //====== <<Function>> === for Grabbing Data with d3 === <<Begins>> ========
   d3.json(earthquakesUrl, function(earthData) {
