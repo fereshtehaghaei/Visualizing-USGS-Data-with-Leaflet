@@ -34,6 +34,7 @@ var outdoors = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{
 });
 
 
+
 // Initialize all of the LayerGroups we'll be using
 var layers = {
     Earthquakes: new L.layerGroup(),
