@@ -71,8 +71,7 @@ var baseMaps = {
 };
 
 // Create a Control for our Layers & Pass in baseMaps and overlays then Add the Layer Control to the Map
-L.control.layers(baseMaps, overlays).addTo(myMap);
-  
+L.control.layers(baseMaps, overlays, {collapsed: false,}).addTo(myMap);
 // =========================
 // Load in GeoJson datas
 // =========================
@@ -80,7 +79,20 @@ L.control.layers(baseMaps, overlays).addTo(myMap);
 var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // Tectonic Plates GeoJson URL Variables
-var tectonicPlatesUrl = "https://github.com/fraxen/tectonicplates/blob/master/GeoJSON/PB2002_boundaries.json";
+var tectonicPlatesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
+
+d3.json(tectonicPlatesUrl, function(platesData) {
+
+    L.geoJson(platesData, {
+        color: "#DC143C",
+            weight: 2
+    
+    }).addTo(myMap);
+
+    console.log(platesData);
+
+    
+});
   
   //====== <<Function>> === for Grabbing Data with d3 === <<Begins>> ========
   d3.json(earthquakesUrl, function(earthData) {
