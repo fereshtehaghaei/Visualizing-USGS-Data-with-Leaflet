@@ -25,12 +25,12 @@ var satelliteLayer = L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{
 
 
 //Adding Outdoors Tile Layer to the map
-var outdoorsLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
-    maxZoom: 18,
-    accessToken: API_KEY,
+var outdoorsLayer = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+  attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+  maxZoom: 18,
+  id: "outdoors-v11",
+  accessToken: API_KEY
 });
-
 
 // Initialize all of the LayerGroups we'll be using
 var layers = {
@@ -51,7 +51,7 @@ var myMap = L.map("map", {
     zoom: 4,
     layers: [
         satelliteLayer, 
-        layers.EARTHQUAKES
+        layers.EARTHQUAKES,
     ]
 });
 
@@ -82,15 +82,14 @@ var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/
 var tectonicPlatesUrl = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
 
 d3.json(tectonicPlatesUrl, function(platesData) {
-
-    L.geoJson(platesData, {
-        color: "#DC143C",
-            weight: 2
     
-    }).addTo(myMap);
-
     console.log(platesData);
 
+    L.geoJson(platesData.features, {
+                color: "#DC143C",
+                weight: 3
+    
+    }).addTo(myMap);
     
 });
   
