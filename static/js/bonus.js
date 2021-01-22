@@ -59,7 +59,7 @@ var myMap = L.map("map", {
 // Create Overlays to hold overlays that may be toggled on or off on map
 var overlays = {
     "Earthquakes" : layers.EARTHQUAKES,
-    "Tectonic Plates" : layers.TECTONIC_PLATES,
+    "Tectonic Plates" : layers.TECTONIC_PLATES
 };
 
 
@@ -72,6 +72,7 @@ var baseMaps = {
 
 // Create a Control for our Layers & Pass in baseMaps and overlays then Add the Layer Control to the Map
 L.control.layers(baseMaps, overlays, {collapsed: false,}).addTo(myMap);
+
 // =========================
 // Load in GeoJson datas
 // =========================
@@ -89,7 +90,7 @@ d3.json(tectonicPlatesUrl, function(platesData) {
                 color: "#DC143C",
                 weight: 3
     
-    }).addTo(myMap);
+    }).addTo(layers.EARTHQUAKES).addTo(myMap);
     
 });
   
@@ -164,7 +165,7 @@ d3.json(tectonicPlatesUrl, function(platesData) {
                       }
   
   
-    }).addTo(myMap);
+    }).addTo(layers.EARTHQUAKES).addTo(myMap);
   
     function getColor(d) {
       return d > 90 ? '#d7301f' :
