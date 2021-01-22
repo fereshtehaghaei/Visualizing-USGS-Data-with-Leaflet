@@ -1,3 +1,9 @@
+#Edited by fa
+.gitignore
+api_keys.py
+config.py
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

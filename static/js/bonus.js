@@ -168,13 +168,12 @@ d3.json(tectonicPlatesUrl, function(platesData) {
     }).addTo(layers.EARTHQUAKES).addTo(myMap);
   
     function getColor(d) {
-      return d > 90 ? '#d7301f' :
-             d > 70  ? '#ec7014' :
-             d > 50  ? '#fad410' :
-             d > 30  ? '#fec44f' : 
-             d > 10   ? '#92fd1c' :
-             d > -10   ? '#98F42F' :
-                        '#AEC6F9';
+      return d > 90 ? '#b10026' :
+             d > 70 ? '#e31a1c' :
+             d > 50 ? '#fb7f6f' :
+             d > 30 ? '#f9b748' : 
+             d > 10 ? '#ddff51' :
+                      '#a0f815';
   }
   
     var legend = L.control({position: 'bottomright'});
