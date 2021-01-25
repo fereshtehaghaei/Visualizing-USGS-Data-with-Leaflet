@@ -46,6 +46,8 @@ Plotted a second data set on the map to illustrate the relationship between tect
 
 ![](Images/Advanced2.png)
 
+![](Images/Advanced3.png)
+
 - - -
 
 
