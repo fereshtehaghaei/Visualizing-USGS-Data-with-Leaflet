@@ -1,10 +1,18 @@
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+
+//                                 Leaflet LEVEL - 1
+
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+
 // Creating map object
 var myMap = L.map("map", {
   center:[38.0902, -96.7129],
   zoom: 5,
 });
 
-// Adding Gray Scale Tile layer to the map
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+//   Adding Gray Scale Tile layer to the map
+//  ////////////////////////////////////////////////////////////////////////////////////////////
 var grayscale = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
   tileSize: 512,
@@ -15,11 +23,12 @@ var grayscale = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
 }).addTo(myMap);
 
 
-
-// Load in GeoJson data
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+//   Load earthquakesURL (USGS Earthquakes GeoJSON Data) with D3
+//  ////////////////////////////////////////////////////////////////////////////////////////////
 var earthquakesUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
-
+  //====== <<Function>> === for Grabbing Data with d3 === <<Begins>> ========
 d3.json(earthquakesUrl, function(earthData) {
     
   console.log(earthData);
@@ -29,7 +38,7 @@ d3.json(earthquakesUrl, function(earthData) {
 
     switch(true) {
       case magnitude <= 1:
-           return "#51ef24";
+           return "#a0f815";
 
       case magnitude <= 2:
            return "#b3de69";
@@ -38,19 +47,20 @@ d3.json(earthquakesUrl, function(earthData) {
            return "#fec44f";
 
       case magnitude <= 4:
-           return "#ec7014";
+           return "#e31a1c";
 
      case magnitude <= 5:
-          return "#d7301f";
+          return "#b10026";
 
       default:
         return "#b30000";
       }
 
 }
-
-  // Function to Determine Size of Marker Based on the Magnitude of the Earthquake
-  // Preventing the error from happening for those magnitude that are = Zero
+  //  ////////////////////////////////////////////////////////////////////////////////////////////
+  //  Function to Determine Size of Marker Based on the Magnitude of the Earthquake
+  //  Preventing the error from happening for those magnitude that are = Zero
+  //  ////////////////////////////////////////////////////////////////////////////////////////////
   function markerSize(magnitude){
 
       if (magnitude === 0)
@@ -61,6 +71,9 @@ d3.json(earthquakesUrl, function(earthData) {
       return magnitude * 5;
 }
 
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+//  Function to Determine Style of Marker Based on the Magnitude of the Earthquake
+//  ///////////////////////////////////////////////////////////////////////////////////////////
   function styleInfo(feature) {
       return {
           radius: markerSize(feature.properties.mag),
@@ -74,7 +87,9 @@ d3.json(earthquakesUrl, function(earthData) {
 
   }
 
-  // Marks the circles on map
+  //  ////////////////////////////////////////////////////////////////////////////////////////////
+  //  Marks the circles on map
+  //  ////////////////////////////////////////////////////////////////////////////////////////////
   L.geoJson(earthData, { 
 
     pointToLayer: function(feature, latlng){
@@ -89,9 +104,12 @@ d3.json(earthquakesUrl, function(earthData) {
                       "<h3>Magnitude: <br></h3>" + feature.properties.mag + "</p>");
                     }
 
-
+// Add earthquakes Layer to the Map
   }).addTo(myMap);
 
+//  ////////////////////////////////////////////////////////////////////////////////////////////
+//    Function to Determine Color of Marker Based on the Magnitude of the Earthquake
+//  ////////////////////////////////////////////////////////////////////////////////////////////
   function getColor(d) {
     return d > 90 ? '#b10026' :
            d > 70 ? '#e31a1c' :
@@ -101,6 +119,9 @@ d3.json(earthquakesUrl, function(earthData) {
                     '#a0f815';
 }
 
+  //  ////////////////////////////////////////////////////////////////////////////////////////////
+ //   Set Up Legend
+ //  ////////////////////////////////////////////////////////////////////////////////////////////
   var legend = L.control({position: 'bottomright'});
   legend.onAdd = function (map) {
   
@@ -115,8 +136,9 @@ d3.json(earthquakesUrl, function(earthData) {
     }
     return div;
     };
+  
+  // Add Legend to the Map
   legend.addTo(myMap)
-
 
 })
 
